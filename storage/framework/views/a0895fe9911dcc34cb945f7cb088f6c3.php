@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=7">
+
+        <?php echo $__env->make('layouts.favicon', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.gstatic.com" rel="preconnect">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+        <!-- Vendor CSS Files -->
+        <link href="<?php echo e(asset('assets/admin/vendor/bootstrap/css/bootstrap.min.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/bootstrap-icons/bootstrap-icons.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/boxicons/css/boxicons.min.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/quill/quill.snow.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/quill/quill.bubble.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/remixicon/remixicon.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/simple-datatables/style.css')); ?>" rel="stylesheet">
+
+        <!-- Template Main CSS File -->
+        <link href="<?php echo e(asset('assets/admin/css/style.css')); ?>" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <!-- ======= Header ======= -->
+        <?php echo $__env->make('layouts.header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <!-- End Header -->
+
+        <!-- ======= Sidebar ======= -->
+        <?php echo $__env->make('layouts.sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <!-- End Sidebar-->
+
+        <main id="main" class="main">
+
+            <div class="pagetitle">
+                <h1>Tableau de bord</h1>
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="<?php echo e(route('welcome')); ?>">Accueil</a>
+                        </li>
+
+                        <li class="breadcrumb-item">Admin</li>
+                        
+                        <li class="breadcrumb-item active">Liste des tuteurs</li>
+                    </ol>
+                </nav>
+            </div><!-- End Page Title -->
+
+            <?php if(session('success')): ?>
+                <div class="alert alert-success">
+                    <?php echo e(session('success')); ?>
+
+                </div>
+            <?php endif; ?>
+
+            <div class="container">
+                <h2 class="text-center">Liste des tuteurs</h2>
+                <div class="text-end mb-5">
+                    <a href="<?php echo e(route('ajoutAffiche')); ?>" class="btn btn-primary">Ajouter</a>
+                </div>
+                <?php if(Session::has('message')): ?>
+                    <div class="alert alert-info" role="alert"><?php echo e(Session::get('message')); ?></div>
+                <?php endif; ?>
+            </div>
+
+            <div class="table-responsive ">
+                <table class="table table-hover">
+                    <thead class="table-primary">
+                        <th>#</th>
+
+                        <th>Nom</th>
+
+                        <th>Prénom</th>
+
+                        <th>Email</th>
+
+                        <th>Photo</th>
+
+                        <th>Rôle</th>
+
+                    </thead>
+                    
+                    <tbody>
+                        <?php $__empty_1 = true; $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <tr>
+                                <td><?php echo e($index + 1); ?></td>
+
+                                <td><?php echo e($row->nom); ?></td>
+
+                                <td><?php echo e($row->prenom); ?></td>
+
+                                <td><?php echo e($row->email); ?></td>
+
+                                <td>
+                                    <div class="showPhoto">
+                                        <div id="imagePreview" style="<?php if($row->photo != ''): ?> background-image:url('<?php echo e(url('/')); ?>/uploads/<?php echo e($row->photo); ?>')<?php else: ?> background-image: url('<?php echo e(url('/img/logo.png')); ?>') <?php endif; ?>;"></div>
+                                    </div>
+                                </td>
+
+                                <td><?php echo e($row->role); ?></td>
+                            </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                            <tr>
+                                <td colspan="7">Aucun enregistrement trouvé !</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                    
+                </table>
+            </div>
+
+            <style>
+                .showPhoto
+                {
+                    width: 51%;
+                    height: 51px;
+                    margin: auto;
+                }
+
+                .showPhoto>div
+                {
+                    width: 90%;
+                    height: 90%;
+                    border-radius: 50%;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+            </style>
+
+            <script>
+                $(document).ready(function() {
+                    // Lorsque l'utilisateur clique sur "Accepter"
+                    $('.accept-btn').on('click', function() {
+                        var index = $(this).data('index');
+                        // Remplacer les boutons par "Acceptée"
+                        $(this).closest('td').html('<span class="text-success">Acceptée</span>');
+                    });
+
+                    // Lorsque l'utilisateur clique sur "Refuser"
+                    $('.reject-btn').on('click', function() {
+                        var index = $(this).data('index');
+                        // Remplacer les boutons par "Refusée"
+                        $(this).closest('td').html('<span class="text-danger">Refusée</span>');
+                    });
+                });
+            </script>
+        </main>
+
+        <!-- Vendor JS Files -->
+        <?php echo $__env->make('layouts.vendorJs', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+        <!-- Template Main JS File -->
+        <script src="<?php echo e(asset('assets/admin/js/main.js')); ?>"></script>
+    </body>
+</html><?php /**PATH C:\laragon\www\stagiaire\resources\views/admin/tuteur.blade.php ENDPATH**/ ?>

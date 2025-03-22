@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="description">
+        <meta content="" name="keywords">
+
+        <!-- Favicons -->
+        <?php echo $__env->make('layouts.favicon', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.gstatic.com" rel="preconnect">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+        <!-- Vendor CSS Files -->
+        <link href="<?php echo e(asset('assets/admin/vendor/bootstrap/css/bootstrap.min.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/bootstrap-icons/bootstrap-icons.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/boxicons/css/boxicons.min.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/quill/quill.snow.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/quill/quill.bubble.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/remixicon/remixicon.css')); ?>" rel="stylesheet">
+        <link href="<?php echo e(asset('assets/admin/vendor/simple-datatables/style.css')); ?>" rel="stylesheet">
+
+        <!-- Template Main CSS File -->
+        <link href="<?php echo e(asset('assets/admin/css/style.css')); ?>" rel="stylesheet">
+
+    </head>
+
+    <body>
+
+    <!-- ======= Header ======= -->
+    <?php echo $__env->make('layouts.welheade', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <!-- End Header -->
+
+    <!-- ======= Sidebar ======= -->
+    <?php echo $__env->make('layouts.stagiaireSidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <!-- End Sidebar-->
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Profil</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="<?php echo e(route('welcome')); ?>">Accueil</a>
+                    </li>
+
+                    <li class="breadcrumb-item">Stagiaire</li>
+                    
+                    <li class="breadcrumb-item active">Profil</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <?php if(session('success')): ?>
+            <div class="alert alert-success">
+                <?php echo e(session('success')); ?>
+
+            </div>
+        <?php endif; ?>
+
+        <?php if($errors->any()): ?>
+            <div class="alert alert-danger">
+                <ul>
+                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e($error); ?></li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+
+        <section class="section profile">
+            <div class="row">
+                <div class="col-xl-4">
+
+                    <div class="card">
+                        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                            <?php if(auth()->guard()->check()): ?>
+                                <img src="<?php echo e(auth()->user()->photo ? asset(auth()->user()->photo) : asset('img/logo.png')); ?>" alt="Profile" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+
+                                <h2><?php echo e(Auth::user()->nom); ?></h2>
+                                <h3><?php echo e(Auth::user()->role); ?></h3>
+                                <div class="social-links mt-2">
+                                    <a href="#" class="twitter">
+                                        <i class="bi bi-twitter"></i>
+                                    </a>
+
+                                    <a href="#" class="facebook">
+                                        <i class="bi bi-facebook"></i>
+                                    </a>
+
+                                    <a href="#" class="instagram">
+                                        <i class="bi bi-instagram"></i>
+                                    </a>
+
+                                    <a href="#" class="linkedin">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+
+                            
+                            
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-xl-8">
+
+                    <div class="card">
+                        <div class="card-body pt-3">
+                            <!-- Bordered Tabs -->
+                            <ul class="nav nav-tabs nav-tabs-bordered">
+
+                                <li class="nav-item">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Aperçu</button>
+                                </li>
+
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Modifier le profil</button>
+                                </li>
+
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Paramètres</button>
+                                </li>
+
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Changer le mot de passe</button>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content pt-2">
+
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview"> 
+
+                                <h5 class="card-title">Détails du profil</h5>
+                                <?php if(auth()->guard()->check()): ?>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label ">Identifiant</div>
+                                        <div class="col-lg-9 col-md-8"><?php echo e(Auth::user()->id); ?></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label ">Nom</div>
+                                        <div class="col-lg-9 col-md-8"><?php echo e(Auth::user()->nom); ?></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label ">Prénom</div>
+                                        <div class="col-lg-9 col-md-8"><?php echo e(Auth::user()->prenom); ?></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Rôle</div>
+                                        <div class="col-lg-9 col-md-8"><?php echo e(Auth::user()->role); ?></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Téléphone</div>
+                                        <div class="col-lg-9 col-md-8"><?php echo e(Auth::user()->contact); ?></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Email</div>
+                                        <div class="col-lg-9 col-md-8"><?php echo e(Auth::user()->email); ?></div>
+                                    </div>
+                                <?php endif; ?>
+
+
+
+                            </div>
+
+                                <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+
+                                    <!-- Profile Edit Form -->
+                                    <form action="<?php echo e(route('profil.update')); ?>" method="POST" enctype="multipart/form-data">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('PUT'); ?>
+                                        <div class="row mb-3">
+                                            <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Image</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <img src="<?php echo e($user->photo ? asset($user->photo) : asset('img/logo.png')); ?>"  alt="Profile" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                                                
+                                                <div class="pt-2">
+                                                    <!-- Modifier -->
+                                                    <label for="profileImageInput" class="btn btn-primary btn-sm" title="Modifier le profil">
+                                                        <i class="bi bi-upload"></i>
+                                                    </label>
+
+                                                    <input type="file" name="profileImage" id="profileImageInput" accept=".jpg, .jpeg, .png" class="d-none" onchange="this.form.submit()">
+
+                                                    <!-- Supprimer -->
+                                                    <button type="button" class="btn btn-danger btn-sm" title="Supprimer le profil" onclick="confirmDelete()">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nom</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="nom" type="text" class="form-control" id="fullName" value="<?php echo e(Auth::user()->nom); ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="Name" class="col-md-4 col-lg-3 col-form-label">Prénom</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="prenom" type="text" class="form-control" id="Name" value="<?php echo e(Auth::user()->prenom); ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="contact" type="text" class="form-control" id="Phone" value="<?php echo e(Auth::user()->contact); ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="email" type="email" class="form-control" id="Email" value="<?php echo e(Auth::user()->email); ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        </div>
+                                    </form>
+                                    <!-- End Profile Edit Form -->
+
+                                    <form id="deleteProfileImageForm" action="<?php echo e(route('profil.delete_image')); ?>" method="POST" style="display: none;">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
+                                    </form>
+
+                                </div>
+
+                                
+
+                                <div class="tab-pane fade pt-3" id="profile-settings">
+
+                                    <!-- Settings Form -->
+                                    <form>
+
+                                        <div class="row mb-3">
+                                            <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Email Notifications</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="changesMade" checked>
+                                                    <label class="form-check-label" for="changesMade">
+                                                        Changes made to your account
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="newProducts" checked>
+                                                <label class="form-check-label" for="newProducts">
+                                                    Information on new products and services
+                                                </label>
+                                                </div>
+                                                <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="proOffers">
+                                                <label class="form-check-label" for="proOffers">
+                                                    Marketing and promo offers
+                                                </label>
+                                                </div>
+                                                <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="securityNotify" checked disabled>
+                                                <label class="form-check-label" for="securityNotify">
+                                                    Security alerts
+                                                </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        </div>
+                                    </form>
+                                    <!-- End settings Form -->
+
+                                </div>
+
+                                <div class="tab-pane fade pt-3" id="profile-change-password">
+                                    <!-- Change Password Form -->
+                                    <form method="POST" action="<?php echo e(route('changementMotDePasse')); ?>">
+                                        <?php echo csrf_field(); ?>
+
+                                        <?php echo method_field('PUT'); ?>
+
+                                        <div class="row mb-3">
+                                            <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Ancien mot de passe</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="mot_de_passe" type="password" class="form-control" id="currentPassword" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">Nouveau mot de passe</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="nouveau_mot_de_passe" type="password" class="form-control" id="newPassword" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Confirmer le nouveau mot de passe</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="nouveau_mot_de_passe_confirmation" type="password" class="form-control" id="renewPassword" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+                                        </div>
+                                    </form>
+                                    <!-- End Change Password Form -->
+
+                                </div>
+
+                            </div><!-- End Bordered Tabs -->
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <!-- End #main -->
+
+
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+        <!-- Vendor JS Files -->
+        <?php echo $__env->make('layouts.vendorJs', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+    <!-- Template Main JS File -->
+    <script src="<?php echo e(asset('assets/admin/js/main.js')); ?>"></script>
+
+    <script>
+        function confirmDelete()
+        {
+            if (confirm("Voulez-vous vraiment supprimer cette image ?")) 
+            {
+                document.getElementById('deleteProfileImageForm').submit();
+            }
+        }
+    </script>
+
+    </body>
+
+</html><?php /**PATH C:\laragon\www\stagiaire\resources\views/stagiaire/profil.blade.php ENDPATH**/ ?>

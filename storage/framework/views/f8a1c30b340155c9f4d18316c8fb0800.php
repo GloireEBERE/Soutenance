@@ -5,23 +5,26 @@
         <li class="nav-item">
             <a class="nav-link " href="<?php echo e(route('dashboard')); ?>">
                 <i class="bi bi-grid"></i>
-                <span>Tableau de bord</span>
+                <span>Tableau de bord</span> 
             </a>
-        </li><!-- End Dashboard Nav -->
+        </li>
+        <!-- End Dashboard Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="<?php echo e(route('affectation.index')); ?>">
                 <i class="bi bi-person-up"></i>
                 <span>Affectation des stagiaires</span>
             </a>
-        </li><!-- End Affectation des stagiaires Page Nav -->
+        </li>
+        <!-- End Affectation des stagiaires Page Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="<?php echo e(route('changeRoleAffiche')); ?>">
                 <i class="bi bi-bookmark-star-fill"></i>
                 <span>Changement de statut</span>
             </a>
-        </li><!-- End Changement de statut Page Nav -->
+        </li>
+        <!-- End Changement de statut Page Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="<?php echo e(route('valider')); ?>">

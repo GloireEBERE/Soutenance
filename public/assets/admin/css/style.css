@@ -616,6 +616,7 @@ h6 {
 @media (max-width: 1199px) {
   .sidebar {
     left: -300px;
+    transition: all 0.3s; /* Animation de déplacement */
   }
 }
 

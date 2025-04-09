@@ -59,22 +59,42 @@
   /**
    * Navbar links active state on scroll
    */
-  let navbarlinks = select('#navbar .scrollto', true)
-  const navbarlinksActive = () => {
-    let position = window.scrollY + 200
-    navbarlinks.forEach(navbarlink => {
-      if (!navbarlink.hash) return
-      let section = select(navbarlink.hash)
-      if (!section) return
-      if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
-        navbarlink.classList.add('active')
-      } else {
-        navbarlink.classList.remove('active')
-      }
-    })
-  }
-  window.addEventListener('load', navbarlinksActive)
-  onscroll(document, navbarlinksActive)
+  
+
+  /**
+   * Essaie
+   */
+  document.addEventListener("DOMContentLoaded", function () {
+    let navLinks = document.querySelectorAll(".sidebar-nav .nav-link");
+
+    function activateNavLink() {
+        let currentPage = window.location.pathname;
+
+        navLinks.forEach(link => {
+            link.classList.remove("active"); // Retire "active" de tous les liens
+            if (!link.classList.contains("collapsed")) {
+                link.classList.add("collapsed"); // Remet "collapsed" aux liens ouverts
+            }
+
+            let linkHref = link.getAttribute("href");
+            if (linkHref && currentPage === new URL(linkHref, window.location.origin).pathname) {
+                link.classList.add("active"); // Active le bon lien
+                link.classList.remove("collapsed"); // Enlève "collapsed" du lien actif
+            }
+        });
+    }
+
+    activateNavLink(); // Active le bon lien au chargement de la page
+
+    // Sauvegarde le lien actif dans localStorage
+    navLinks.forEach(link => {
+        link.addEventListener("click", function () {
+            localStorage.setItem("activeNavLink", this.getAttribute("href"));
+        });
+    });
+});
+
+
 
   /**
    * Toggle .header-scrolled class to #header when page is scrolled

@@ -113,6 +113,10 @@
                     </tbody>
                     
                 </table>
+
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $stagiaires->links() }}
+                </div>
             </div>
 
             <style>

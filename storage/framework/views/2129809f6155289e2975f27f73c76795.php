@@ -115,6 +115,11 @@
                     </tbody>
                     
                 </table>
+
+                <div class="d-flex justify-content-center mt-3">
+                    <?php echo e($users->links()); ?>
+
+                </div>
             </div>
 
             <style>

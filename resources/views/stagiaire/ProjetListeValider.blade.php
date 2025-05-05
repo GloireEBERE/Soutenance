@@ -89,7 +89,7 @@
 
                                     <td>
                                         {{ $projet->date_debut ? \Carbon\Carbon::parse($projet->date_debut)->format('d/m/Y') : 'N/A' }}
-                                    </td>
+                                    </td> 
 
                                     <td>
                                         {{ $projet->date_fin ? \Carbon\Carbon::parse($projet->date_fin)->format('d/m/Y') : 'N/A' }}
@@ -109,6 +109,10 @@
                         @endforelse
                     </tbody>
                 </table>
+
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $projets->links() }}
+                </div>
             </div>
 
         </main>

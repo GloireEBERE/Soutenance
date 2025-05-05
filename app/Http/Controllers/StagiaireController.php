@@ -20,6 +20,15 @@ class StagiaireController extends Controller
     // Afficher le statut de la demande dans Dashboard
     public function index()
     {
+        $user = Auth::user();
+
+        // Vérifie que la relation "stagiaire" existe
+        if (!$user->stagiaire) {
+            return view('stagiaire.dashboard', [
+                'demandes' => collect(), // vue vide sans planter
+            ]);
+        }
+
         $stagiaireId = Auth::user()->stagiaire->id; // Récupération via la relation
         $demandes = Demande::where('stagiaire_id', $stagiaireId)->get();
 
@@ -31,7 +40,7 @@ class StagiaireController extends Controller
     // Afficher la liste des tâches à effectuer
     public function TacheListeFaire()
     {
-        $taches = Auth::user()->stagiaire->taches()->where('statut', 'en cours')->get(); 
+        $taches = Auth::user()->stagiaire->taches()->where('statut', 'en cours')->latest()->paginate(3); 
         // Récupère toutes les tâches du stagiaire connecté
         
         return view('stagiaire.TacheListeFaire', compact('taches'));
@@ -53,7 +62,7 @@ class StagiaireController extends Controller
         // Récupérer les tâches du stagiaire qui ne sont pas "en cours"
         $taches = Tache::where('stagiaire_id', $stagiaire->id)
                     ->where('statut', '!=', 'en cours')
-                    ->get();
+                    ->latest()->paginate(1);
 
         return view('stagiaire.TacheListeValider', compact('taches'));
     }
@@ -170,13 +179,13 @@ class StagiaireController extends Controller
     // Afficher la liste des projets à effectuer
     public function ProjetListeFaire()
     {
-        $projets = Auth::user()->stagiaire->projets()->where('statut', 'en cours')->get(); 
+        $projets = Auth::user()->stagiaire->projets()->where('statut', 'en cours')->latest()->paginate(3); 
         // Récupère toutes les projets du stagiaire connecté
         
         return view('stagiaire.ProjetListeFaire', compact('projets'));
     }
 
-    // Changer le statut de la projet à faire
+    // Changer le statut du projet à faire
     public function updateProjet(Request $request, $id)
     {
         // Validation du statut
@@ -225,10 +234,10 @@ class StagiaireController extends Controller
     {
         $stagiaire = Auth::user()->stagiaire;
 
-        $projets = $stagiaire->projets()->where('statut', '!=', 'en cours')->get();
+        $projets = $stagiaire->projets()->where('statut', '!=', 'en cours')->latest()->paginate(2);
 
         return view('stagiaire.ProjetListeValider', compact('projets'));
-    }
+    } 
 
     //La courbe qui affiche le nombre de stagiaire accepté
     public function courbe()

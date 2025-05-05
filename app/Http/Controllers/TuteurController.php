@@ -287,7 +287,7 @@ class TuteurController extends Controller
                                 $query->whereIn('stagiaire_id', $stagiaires->pluck('id'));
                             })
                             ->with(['stagiaires.user']) // Charger les relations pour éviter les requêtes N+1
-                            ->get();
+                            ->latest()->paginate(2);
 
         return view('tuteur.listeProjet', compact('projets'));
     }

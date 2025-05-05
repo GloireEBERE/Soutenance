@@ -88,6 +88,8 @@
 
                                     <td>{{ $tache->titre_tache }}</td>
 
+                                    <td>{{ $tache->description_tache }}</td>
+
                                     <td>
                                         {{ $tache->date_debut ? \Carbon\Carbon::parse($tache->date_debut)->format('d/m/Y') : 'N/A' }}
                                     </td>
@@ -106,6 +108,10 @@
                         @endforelse
                     </tbody>
                 </table>
+
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $taches->links() }}
+                </div>
             </div>
 
         </main>

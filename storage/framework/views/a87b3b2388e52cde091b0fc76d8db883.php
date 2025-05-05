@@ -88,6 +88,8 @@
 
                                     <td><?php echo e($tache->titre_tache); ?></td>
 
+                                    <td><?php echo e($tache->description_tache); ?></td>
+
                                     <td>
                                         <?php echo e($tache->date_debut ? \Carbon\Carbon::parse($tache->date_debut)->format('d/m/Y') : 'N/A'); ?>
 
@@ -108,6 +110,11 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+
+                <div class="d-flex justify-content-center mt-3">
+                    <?php echo e($taches->links()); ?>
+
+                </div>
             </div>
 
         </main>

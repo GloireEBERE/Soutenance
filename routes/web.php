@@ -233,6 +233,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // La route pour consulter son rapport final
     Route::get('/liste/rapport/final', [AdminController::class, 'consulterRapport'])->name('consulterRapport');
 
+    // Affichage de la recherche
+    Route::get('/resultat', [AdminController::class, 'rechercher'])->name('resultat');
+
 });
 
 #Route::get('/dashboard', function () {

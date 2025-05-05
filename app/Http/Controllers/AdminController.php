@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Demande;
 use App\Models\Rapport;
 use App\Notifications\DemandeDeStageNotification;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -44,7 +45,8 @@ class AdminController extends Controller
     // Méthode pour afficher la liste des stagiaires
     public function tuteur()
     {
-        $users = User::where('role', 'tuteur')->get();
+        $users = User::where('role', 'tuteur')->latest()->paginate(1);
+
         return view('admin.tuteur', compact('users'));
     }
 
@@ -52,6 +54,7 @@ class AdminController extends Controller
     public function stagiaire()
     {
         $stagiaires = Stagiaire::whereHas('demandes')->with(['users', 'demandes'])->get();
+        
         return view('admin.statistic', compact('stagiaires'));
     }
 
@@ -59,7 +62,7 @@ class AdminController extends Controller
     {
         $stagiaires = Stagiaire::whereHas('demandes', function($query) {
             $query->where('statut', 'acceptée');
-        })->with(['user', 'demandes'])->get();
+        })->with(['user', 'demandes'])->latest()->paginate(1);
 
         return view('admin.stagiaireAccepte', compact('stagiaires'));
     }
@@ -68,7 +71,7 @@ class AdminController extends Controller
     {
         $stagiaires = Stagiaire::whereHas('demandes', function($query) {
             $query->where('statut', 'refusée');
-        })->with(['user', 'demandes'])->get();
+        })->with(['user', 'demandes'])->latest()->paginate(1);
 
         return view('admin.stagiaireRefuse', compact('stagiaires'));
     }
@@ -83,8 +86,24 @@ class AdminController extends Controller
         $tuteurs = User::where('role', 'tuteur')->get();
 
         // Fusionner les deux collections
-        $users = $stagiaires->merge($tuteurs);
-        return view('admin.affiche', compact('users'));
+        $users = $stagiaires->merge($tuteurs)->sortBy('nom');
+
+        // La pagination manuelle
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+
+        $perPage = 3;
+
+        $currentItems = $users->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        $paginatedUsers = new LengthAwarePaginator(
+            $currentItems,
+            $users->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return view('admin.affiche', ['users' => $paginatedUsers]);
     }
 
     public function edit()
@@ -185,6 +204,16 @@ class AdminController extends Controller
         $rapports = Rapport::with('stagiaire.user')->get();
 
         return view('admin.consulterRapport', compact('rapports'));
+    }
+
+    // Méthode pour effectuer une recherche
+    public function rechercher( Request $request)
+    {
+        $query = $request->input('query');
+
+        $resultat = User::where('nom', 'LIKE', '%' . $query . '%')->orWhere('prenom', 'LIKE', '%' . $query . '%')->orWhere('role', 'LIKE', '%' . $query . '%')->orWhere('email', 'LIKE', '%' . $query . '%')->paginate(1)->appends(['query' => $query]);
+
+        return view('admin.resultat', compact('resultat', 'query'));
     }
 
 }

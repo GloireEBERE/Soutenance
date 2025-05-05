@@ -114,6 +114,11 @@
                     </tbody>
                     
                 </table>
+
+                <div class="d-flex justify-content-center mt-3">
+                    <?php echo e($stagiaires->links()); ?>
+
+                </div>
             </div>
 
             <style>
